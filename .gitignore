@@ -1,0 +1,6 @@
+node_modules/
+lib/
+
+# .yalc for local install testing
+.yalc
+yalc.lock

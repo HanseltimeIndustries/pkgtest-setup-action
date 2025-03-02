@@ -1,0 +1,11 @@
+name: "TODO: your action"
+description: "TODO: your action description"
+inputs:
+  {}
+  # TODO: add each option that matches your Action Option in action.ts
+outputs:
+  {}
+  # TODO: add any outputs
+runs:
+  using: "node20"
+  main: "bundle/index.js"
