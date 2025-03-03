@@ -40,7 +40,7 @@ jobs:
         run: |
             <pkg manager> build
     - id: pkgtest-setup
-      uses: hanseltimeindustries/pkgtest-setup-action
+      uses: hanseltimeindustries/pkgtest-setup-action@v1
       # Run pkgtest with a directive to collect logs
     - name: pkgtest
       run: |
