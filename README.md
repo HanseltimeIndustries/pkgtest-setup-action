@@ -11,10 +11,34 @@ In the event that you do not want to use this action, you can follow the manual 
 
 ### Example
 
-This, in general, is the recommended setup as the default inputs are recommended.
+This, in general, is the recommended setup (default inputs are recommended).
 
 ```yaml
 jobs:
+  # Build your project once on the OS that you would build and publish with
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Check out your repo
+      - uses: actions/checkout@v4
+      # Make sure node is available
+      - uses: actions/setup-node@v4
+      # Install your depedencies
+      - name: install
+        run: |
+            <pkg manager> install
+      # Your package build
+      - name: build
+        run: |
+            <pkg manager> build
+      # Save your build output folder
+      - name: Save dist
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            dist/
+          key: dist-${{ github.sha }}
+          enableCrossOsArchive: true
   pkg-test:
     needs:
       - ci-checks
@@ -35,10 +59,14 @@ jobs:
       - name: install
         run: |
             <pkg manager> install
-      # Your package build
-      - name: build
-        run: |
-            <pkg manager> build
+      # Restore the built files
+      - name: Restore dist
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            dist/
+          key: dist-${{ github.sha }}
+          enableCrossOsArchive: true
     - id: pkgtest-setup
       uses: hanseltimeindustries/pkgtest-setup-action@v1
       # Run pkgtest with a directive to collect logs
