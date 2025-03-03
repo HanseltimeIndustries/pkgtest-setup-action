@@ -1,3 +1,10 @@
+# 1.0.0 (2025-03-03)
+
+
+### Features
+
+* initial action ([6c455ac](https://github.com/HanseltimeIndustries/pkgtest-setup-action/commit/6c455acf8bb1634172b1ff5545e2671dd17db904))
+
 # 1.0.0 (2024-11-19)
 
 
