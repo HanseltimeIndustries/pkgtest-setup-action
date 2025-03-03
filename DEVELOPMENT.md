@@ -38,10 +38,3 @@ As a general rule of thumb:
 
 1. use `feat:` for minor version changes
 2. use `fix:` for patch version changes
-
-## Auto-syncing with the base template
-
-There is also an [auto-sync](./.github/workflows/auto-sync.yaml) workflow that we provide to give you the ability to automatically be kept up-to-date
-on any boilerplate changes. This will create PRs when there is a PR with new changes to the base repo so that you can see the diff and determine how
-to act. You can make use of the [templatesync.json](./templatesync.json) and [templatesync.local.json](./templatesync.local.json) files to change how
-files merge together. For more information please see the [template-repo-sync-action](https://github.com/HanseltimeIndustries/template-repo-sync-action).

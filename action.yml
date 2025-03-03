@@ -1,11 +1,54 @@
-name: "TODO: your action"
-description: "TODO: your action description"
+name: "pkgtest-setup-action"
+description: "Sets up the runner environment for your calls to pkgtest"
 inputs:
-  {}
-  # TODO: add each option that matches your Action Option in action.ts
+  corepack_version:
+    description: |
+      The version of corepack that we ensure is set up.
+      Default is latest.
+    default: latest
+  temp_folder:
+    description: |
+      The temporary location where we will write all pkgtest test projects.  This is different than RUNNER_TEMP because traversing across the different mounted volumes/drives creates problems for import.
+      Please use relative paths to avoid relative resolution problems across mounted volumes.  Use / path separators.
+      Default is '../pkgtest-temp'
+    default: '../pkgtest-temp'
 outputs:
-  {}
-  # TODO: add any outputs
+  collect_log_file_folder:
+    description: |
+      The directory where log files would be collected.  Can be used with archive artifacts as it is an absolute path.
+    value: ${{ steps.make-outputs.outputs.collect_log_file_folder }}
 runs:
-  using: "node20"
-  main: "bundle/index.js"
+  using: "composite"
+  steps:
+    - name: Handle Windows pkgtest setup
+      if: ${{ runner.os == 'Windows' }}
+      shell: powershell
+      run: |
+        # Corepack updates do not work on windows so we have to update paths
+        npm install -g --force corepack@${{ inputs.corepack_version }}
+        echo "C:\npm\prefix\" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        # Temporary directory in windows is basically mandatory given package manager issues with being on a separate drive
+        $targetDir = "${{ inputs.temp_folder }}" -replace '/', '\'
+        New-Item -ItemType Directory -Path $targetDir
+        $tempDir = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $targetDir
+        echo "PKG_TEST_TEMP_DIR=$tempDir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        powershell -inputformat none -outputformat none -NonInteractive -Command Add-MpPreference -ExclusionPath $tempDir
+        powershell -inputformat none -outputformat none -NonInteractive -Command Add-MpPreference -ExclusionPath $env:GITHUB_WORKSPACE
+        # Artifact storage requires an already fully resolved url
+        $absoluteTempDir = Resolve-Path $tempDir
+        $logsDir = Join-Path $absoluteTempDir "pkgtest-logs"
+        echo "LOG_DIR_TO_ARCHIVE=$logsDir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+    - name: Handle Non-Windows pkgtest setup
+      if: ${{ runner.os != 'Windows' }}
+      shell: bash
+      run: |
+        npm install -g --force corepack@${{ inputs.corepack_version }}
+        mkdir "${{ inputs.temp_folder }}"
+        PKG_TEST_TEMP_DIR=$(readlink -f "${{ inputs.temp_folder }}")
+        echo "PKG_TEST_TEMP_DIR=${PKG_TEST_TEMP_DIR}" >> $GITHUB_ENV
+        echo "LOG_DIR_TO_ARCHIVE=${PKG_TEST_TEMP_DIR}/pkgtest-logs" >> $GITHUB_ENV
+    - name: Output Log Dir to Archive
+      id: make-outputs
+      shell: bash
+      run: |
+        echo "collect_log_file_folder=${{env.LOG_DIR_TO_ARCHIVE}}" >> $GITHUB_OUTPUT
