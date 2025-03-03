@@ -1,47 +1,40 @@
 {
-	"name": "todo-your-action-name",
+	"name": "@hanseltime/pkgtest-setup-action",
 	"version": "1.0.0",
-	"description": "todo your description",
-	"main": "dist/action.js",
+	"description": "An action to set up your github action runner for pkgtest",
+	"files": ["simpleBin.js"],
+	"bin": {
+		"justForPkgtest": "./simpleBin.js"
+	},
 	"scripts": {
 		"format": "biome format",
 		"lint": "biome lint",
-		"bundle": "ncc build src/action.ts -o bundle",
-		"test": "echo \"Error: no test specified\"",
 		"build": "tsc",
 		"prepare": "husky",
-		"release": "npx semantic-release"
+		"release": "npx semantic-release",
+		"justForPkgtestScript": "node -e \"console.log('hello');\""
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/HanseltimeIndustries/github-actions-template.git"
+		"url": "https://github.com/HanseltimeIndustries/pkgtest-setup-action.git"
 	},
-	"author": "",
+	"author": "hanseltime",
 	"license": "ISC",
 	"bugs": {
-		"url": "TODO: your repository url/issues"
+		"url": "https://github.com/HanseltimeIndustries/pkgtest-setup-action/issues"
 	},
-	"homepage": "TODO: your repository url/#readme",
+	"homepage": "https://github.com/HanseltimeIndustries/pkgtest-setup-action/#readme",
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
 		"@commitlint/config-angular": "^19.0.3",
+		"@hanseltime/pkgtest": "^1.3.0",
 		"@semantic-release/changelog": "^6.0.3",
 		"@semantic-release/exec": "^6.0.3",
 		"@semantic-release/git": "^10.0.1",
-		"@types/node": "^20.11.24",
-		"@vercel/ncc": "^0.38.1",
-		"commander": "^12.0.0",
 		"commitlint": "^19.0.3",
 		"husky": "^9.0.11",
-		"octokit": "^3.1.2",
 		"semantic-release": "^23.0.2",
-		"semantic-release-major-tag": "^0.3.2",
-		"ts-node": "^10.9.2",
-		"typescript": "^5.3.3"
-	},
-	"dependencies": {
-		"@actions/core": "^1.10.1",
-		"@actions/github": "^6.0.0"
+		"semantic-release-major-tag": "^0.3.2"
 	},
 	"private": true,
 	"packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
