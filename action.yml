@@ -1,5 +1,8 @@
 name: "pkgtest-setup-action"
 description: "Sets up the runner environment for your calls to pkgtest"
+branding:
+  icon: check-circle
+  color: green
 inputs:
   corepack_version:
     description: |
